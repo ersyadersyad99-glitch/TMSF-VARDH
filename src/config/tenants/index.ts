@@ -1,20 +1,25 @@
 import { gercepinBranding, TenantBranding } from './gercepin';
 import { damBranding } from './dam';
+import { vardhBranding } from './vardh';
 
 export type { TenantBranding };
 
 export const TENANT_BRANDINGS: Record<string, TenantBranding> = {
+  vardh: vardhBranding,
+  'tms-demo': vardhBranding,
   gercepin: gercepinBranding,
   dam: damBranding,
 };
 
-export const DEFAULT_TENANT = 'gercepin';
+export const DEFAULT_TENANT = 'vardh';
 
 /**
  * Resolves active tenant ID dynamically:
- * 1. Subdomain of hostname (e.g. dam.local -> dam, gercepin.local -> gercepin)
- * 2. VITE_TENANT env variable override
- * 3. Fallback to DEFAULT_TENANT
+ * 1. Query parameter override (e.g. ?tenant=dam)
+ * 2. Saved tenant in localStorage
+ * 3. Subdomain of hostname (e.g. dam.local -> dam, gercepin.local -> gercepin)
+ * 4. VITE_TENANT env variable override
+ * 5. Fallback to DEFAULT_TENANT ('vardh')
  */
 export function getActiveTenantId(): string {
   if (typeof window !== 'undefined') {
@@ -32,15 +37,20 @@ export function getActiveTenantId(): string {
       return savedTenant;
     }
 
-    // 3. Subdomain of hostname (e.g. dam.local -> dam, gercepin.local -> gercepin)
+    // 3. Subdomain of hostname (e.g. dam.vardh.id -> dam, gercepin.vardh.id -> gercepin)
     const host = window.location.hostname;
     const subdomain = host.split('.')[0];
     if (subdomain && TENANT_BRANDINGS[subdomain]) {
       return subdomain;
     }
+
+    // 4. Default to vardh for vardh.id domains
+    if (host.includes('vardh.id')) {
+      return 'vardh';
+    }
   }
 
-  // 4. Env variable override
+  // 5. Env variable override
   const envTenant = import.meta.env.VITE_TENANT;
   if (envTenant && TENANT_BRANDINGS[envTenant]) {
     return envTenant;
@@ -49,8 +59,8 @@ export function getActiveTenantId(): string {
   return DEFAULT_TENANT;
 }
 
-
 export function getTenantBranding(tenantId?: string): TenantBranding {
   const id = tenantId || getActiveTenantId();
-  return TENANT_BRANDINGS[id] || gercepinBranding;
+  return TENANT_BRANDINGS[id] || vardhBranding;
 }
+

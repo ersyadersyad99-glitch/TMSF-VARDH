@@ -10,6 +10,18 @@ export interface TenantConfig {
 }
 
 export const TENANTS: Record<string, TenantConfig> = {
+  vardh: {
+    id:     'vardh',
+    name:   'VARDH Technology',
+    dbName: 'tmsf_gercepin',
+  },
+
+  'tms-demo': {
+    id:     'tms-demo',
+    name:   'VARDH Technology',
+    dbName: 'tmsf_gercepin',
+  },
+
   gercepin: {
     id:     'gercepin',
     name:   'PT Gerak Cepat Indonesia',
@@ -24,4 +36,4 @@ export const TENANTS: Record<string, TenantConfig> = {
 };
 
 /** Default tenant when no subdomain / header is detected (e.g. bare localhost dev) */
-export const DEFAULT_TENANT = 'gercepin';
+export const DEFAULT_TENANT = 'vardh';

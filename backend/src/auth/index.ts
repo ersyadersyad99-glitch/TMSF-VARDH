@@ -84,6 +84,9 @@ export const auth = betterAuth({
       'https://tmsdam.digitalinaja.net',
       'https://tms.digitalinaja.net',
       'https://api-tmsgercepin.digitalinaja.net',
+      'https://tms-demo.vardh.id',
+      'https://api-backend.vardh.id',
+      'https://vardh.id',
     ];
 
     const corsOrigins = process.env.CORS_ORIGINS;
@@ -100,7 +103,7 @@ export const auth = betterAuth({
 
     const reqOrigin = request?.headers?.get('origin');
     if (reqOrigin) {
-      if (reqOrigin.endsWith('.digitalinaja.net') || reqOrigin.endsWith('.vercel.app')) {
+      if (reqOrigin.endsWith('.digitalinaja.net') || reqOrigin.endsWith('.vercel.app') || reqOrigin.endsWith('.vardh.id') || reqOrigin === 'https://vardh.id') {
         if (!origins.includes(reqOrigin)) origins.push(reqOrigin);
       }
     }

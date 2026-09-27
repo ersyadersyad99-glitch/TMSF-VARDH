@@ -102,11 +102,13 @@ export default function Sidebar() {
       <div className="sidebar-logo">
         {branding.logoImage ? (
           /* Tenant has actual logo image */
-          <img
-            src={branding.logoImage}
-            alt={branding.sidebarTitle}
-            className="sidebar-logo-img"
-          />
+          <div className="sidebar-logo-card">
+            <img
+              src={branding.logoImage}
+              alt={branding.sidebarTitle}
+              className="sidebar-logo-img"
+            />
+          </div>
         ) : (
           /* Fallback: letter avatar + text */
           <>

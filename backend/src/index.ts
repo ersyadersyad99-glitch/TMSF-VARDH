@@ -50,7 +50,7 @@ app.use(cors({
     if (!origin) return callback(null, true);
     if (corsAllowlist.includes(origin)) return callback(null, true);
 
-    if (origin.endsWith('.digitalinaja.net') || origin.endsWith('.vercel.app')) {
+    if (origin.endsWith('.digitalinaja.net') || origin.endsWith('.vercel.app') || origin.endsWith('.vardh.id') || origin === 'https://vardh.id') {
       return callback(null, true);
     }
 
