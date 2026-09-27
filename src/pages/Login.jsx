@@ -33,26 +33,19 @@ export default function Login() {
 
   return (
     <div className="gercep-login-page">
-      {/* Background Vignette and Glow Overlay */}
+      {/* Background Image & Vignette Overlay */}
       <div className="gercep-bg-overlay" />
 
       {/* Top Navbar */}
       <header className="gercep-navbar">
         <div className="gercep-nav-brand">
-          {branding.logoImage ? (
-            <div className="gercep-logo-pill">
-              <img
-                src={branding.logoImage}
-                alt={branding.sidebarTitle}
-                className="gercep-logo-img"
-              />
-            </div>
-          ) : (
-            <div className="gercep-logo-text">
-              <span className="gercep-logo-icon">⚡</span>
-              <span>{branding.sidebarTitle}</span>
-            </div>
-          )}
+          <div className="gercep-logo-pill">
+            <img
+              src="/logo-vardh.png"
+              alt="VARDH"
+              className="gercep-logo-img"
+            />
+          </div>
         </div>
       </header>
 
@@ -60,43 +53,25 @@ export default function Login() {
       <div className="gercep-hero-container">
         {/* Left Hero Content */}
         <div className="gercep-hero-left">
-          <div className="gercep-badge">
-            <span className="gercep-badge-dot"></span>
-            ENTERPRISE LOGISTICS SYSTEM
-          </div>
           <h1 className="gercep-hero-headline">
-            <span className="gercep-white-text">INTELLIGENT</span><br />
-            <span className="vardh-gradient-text">SYSTEMS & GROWTH</span><br />
-            <span className="gercep-white-text">FOR MODERN FLEET</span>
+            <span className="gercep-white-text">DELIVER</span>{' '}
+            <span className="gercep-smiles-text">SMILES</span><br />
+            <span className="gercep-white-text">TO EVERY DESTINATION</span>
           </h1>
 
           <p className="gercep-hero-description">
-            Platform manajemen transportasi terpadu untuk efisiensi armada, pengiriman presisi, visibilitas real-time, dan otomasi finansial.
+            We don't just deliver goods, we deliver trust, efficiency, and smiles at
+            every destination. Experience the modern standard of logistics.
           </p>
-
-          <div className="vardh-hero-features">
-            <div className="vardh-feature-item">
-              <span className="vardh-feature-bullet" />
-              <span>Real-Time Fleet & Order Tracking</span>
-            </div>
-            <div className="vardh-feature-item">
-              <span className="vardh-feature-bullet" />
-              <span>Automated Delivery Orders & Billing</span>
-            </div>
-            <div className="vardh-feature-item">
-              <span className="vardh-feature-bullet" />
-              <span>Enterprise Role-Based Access Control</span>
-            </div>
-          </div>
         </div>
 
         {/* Right Glassmorphic Login Card */}
         <div className="gercep-hero-right">
           <div className="login-card gercep-glass-card">
             <div className="login-card-header">
-              <div className="gercep-card-badge">ENTERPRISE TMS ACCESS</div>
+              <div className="gercep-card-badge">TMS SYSTEM LOGIN</div>
               <h2>Selamat Datang</h2>
-              <p>Masuk ke portal {branding.name}</p>
+              <p>Masuk ke akun TMS VARDH</p>
             </div>
 
             <form className="login-form" onSubmit={handleSubmit}>
@@ -109,12 +84,12 @@ export default function Login() {
               )}
 
               <div className="form-group">
-                <label className="form-label">User Name</label>
+                <label className="form-label">USER NAME</label>
                 <input
                   id="login-email"
                   type="text"
                   className="form-input login-input"
-                  placeholder="Username (contoh: ersyad.gercepin)"
+                  placeholder="Ersyad.Gercepin atau Ersyad.DAM"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   required

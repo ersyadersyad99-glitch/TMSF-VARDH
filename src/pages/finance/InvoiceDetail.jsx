@@ -174,7 +174,7 @@ export default function InvoiceDetail() {
           <div className="invoice-top-header">
             <div className="invoice-logo-wrap">
               <img
-                src={branding.logoImage || '/logo-gercepin.png'}
+                src={branding.logoImage || '/logo-vardh.png'}
                 alt={branding.sidebarTitle}
               />
             </div>

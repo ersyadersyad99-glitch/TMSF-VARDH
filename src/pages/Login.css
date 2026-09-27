@@ -6,21 +6,17 @@
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
-  background: #070d1a radial-gradient(circle at 15% 20%, rgba(0, 102, 255, 0.18) 0%, transparent 45%),
-              radial-gradient(circle at 85% 75%, rgba(0, 210, 211, 0.12) 0%, transparent 45%),
-              radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.95) 0%, #060a14 100%);
+  background: #090d16 url('/gercep-hero-bg.jpg') center/cover no-repeat fixed;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   color: #ffffff;
 }
 
-/* Lighter Vignette Overlay */
+/* Lighter Vignette Overlay so background image is clearly visible */
 .gercep-bg-overlay {
   position: absolute;
   inset: 0;
-  background-image: 
-    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  background-size: 40px 40px;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.2) 0%, rgba(15, 23, 42, 0.45) 100%),
+              radial-gradient(circle at 30% 50%, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.5) 100%);
   pointer-events: none;
   z-index: 1;
 }
@@ -33,7 +29,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 24px 60px;
-  background: linear-gradient(180deg, rgba(7, 13, 26, 0.85) 0%, transparent 100%);
+  background: linear-gradient(180deg, rgba(9, 13, 22, 0.75) 0%, transparent 100%);
 }
 
 .gercep-nav-brand {
@@ -44,39 +40,24 @@
 
 .gercep-logo-pill {
   background: #ffffff;
-  padding: 8px 18px;
-  border-radius: 9999px;
-  display: flex;
+  padding: 6px 16px;
+  border-radius: 10px;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.4);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+  transition: transform 0.25s ease;
 }
 
 .gercep-logo-pill:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 25px rgba(0, 102, 255, 0.4), 0 0 0 1px rgba(0, 102, 255, 0.6);
+  transform: scale(1.02);
 }
 
 .gercep-logo-img {
-  height: 38px;
+  height: 40px;
   width: auto;
   object-fit: contain;
   transition: transform 0.3s ease;
-}
-
-.gercep-logo-text {
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.gercep-logo-icon {
-  font-size: 24px;
 }
 
 /* ─── HERO CONTAINER ─── */
@@ -87,11 +68,11 @@
   display: grid;
   grid-template-columns: 1.2fr 0.8fr;
   align-items: center;
-  padding: 40px 60px 80px;
-  max-width: 1480px;
+  padding: 40px 40px 80px;
+  max-width: 1560px;
   margin: 0 auto;
   width: 100%;
-  gap: 48px;
+  gap: 32px;
 }
 
 /* ─── HERO LEFT ─── */
@@ -99,96 +80,47 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  max-width: 620px;
-}
-
-.gercep-badge {
-  background: rgba(0, 102, 255, 0.14);
-  border: 1px solid rgba(0, 140, 255, 0.4);
-  color: #38bdf8;
-  padding: 7px 18px;
-  border-radius: 9999px;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  backdrop-filter: blur(10px);
-  margin-bottom: 24px;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.gercep-badge-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #38bdf8;
-  box-shadow: 0 0 10px #38bdf8;
-  animation: pulseDot 2s infinite ease-in-out;
-}
-
-@keyframes pulseDot {
-  0%, 100% { opacity: 0.6; transform: scale(0.9); }
-  50% { opacity: 1; transform: scale(1.15); }
+  margin-left: -15px;
+  max-width: 580px;
 }
 
 .gercep-hero-headline,
 .gercep-hero-left h1 {
-  font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif !important;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+  font-style: italic !important;
   font-weight: 900 !important;
-  font-size: 46px !important;
-  line-height: 1.15 !important;
+  font-size: 48px !important;
+  line-height: 1.08 !important;
   color: #ffffff !important;
+  text-transform: uppercase !important;
   letter-spacing: -0.5px !important;
-  margin-bottom: 22px !important;
-  text-shadow: 0 4px 20px rgba(0,0,0,0.8) !important;
+  margin-bottom: 20px !important;
+  text-shadow: 0 4px 25px rgba(0,0,0,0.95), 0 2px 8px rgba(0,0,0,0.95) !important;
 }
 
 .gercep-white-text {
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
+  text-shadow: 0 4px 25px rgba(0,0,0,0.95), 0 2px 8px rgba(0,0,0,0.95) !important;
 }
 
-.vardh-gradient-text {
-  background: linear-gradient(135deg, #0084ff 0%, #00d2d3 50%, #10b981 100%) !important;
-  -webkit-background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
+/* Outlined Green Text style matching "SMILES" */
+.gercep-smiles-text {
+  color: #22c55e !important;
+  -webkit-text-fill-color: #22c55e !important;
+  -webkit-text-stroke: 1.5px #4ade80 !important;
+  text-shadow: 0 0 25px rgba(34, 197, 94, 0.7), 0 4px 15px rgba(0,0,0,0.95) !important;
   display: inline-block !important;
-  filter: drop-shadow(0 0 25px rgba(0, 132, 255, 0.45));
 }
 
 .gercep-hero-description {
   font-size: 16px;
-  line-height: 1.7;
-  color: rgba(226, 232, 240, 0.88);
-  max-width: 540px;
-  margin-bottom: 28px;
-  font-weight: 400;
-}
-
-.vardh-hero-features {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.vardh-feature-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: rgba(255, 255, 255, 0.85);
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.vardh-feature-bullet {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #00d2d3;
-  box-shadow: 0 0 10px rgba(0, 210, 211, 0.9);
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.95);
+  max-width: 520px;
+  margin-bottom: 32px;
+  font-weight: 500;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.9), 0 1px 4px rgba(0,0,0,0.9);
 }
 
 /* ─── HERO RIGHT: GLASSMORPHIC LOGIN CARD ─── */
@@ -201,68 +133,59 @@
 .gercep-glass-card {
   width: 100%;
   max-width: 420px;
-  background: rgba(12, 22, 42, 0.82) !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  background: rgba(15, 23, 42, 0.78) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
   border-radius: 24px !important;
-  padding: 38px 34px !important;
-  backdrop-filter: blur(28px) !important;
-  -webkit-backdrop-filter: blur(28px) !important;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(0, 102, 255, 0.2) !important;
+  padding: 36px 32px !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(34, 197, 94, 0.15) !important;
 }
 
 .gercep-card-badge {
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 1.5px;
-  color: #38bdf8;
+  color: #4ade80;
   text-transform: uppercase;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .login-card-header h2 {
   color: #ffffff !important;
   font-size: 24px !important;
   font-weight: 800 !important;
-  letter-spacing: -0.3px;
 }
 
 .login-card-header p {
-  color: rgba(203, 213, 225, 0.7) !important;
+  color: rgba(255, 255, 255, 0.65) !important;
   font-size: 13px !important;
-  margin-top: 4px;
 }
 
 .login-input {
-  background: rgba(4, 9, 20, 0.75) !important;
-  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  background: rgba(2, 6, 23, 0.7) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
   color: #ffffff !important;
   border-radius: 12px !important;
-  padding: 12px 16px !important;
-  font-size: 14px !important;
-  transition: all 0.2s ease !important;
 }
 
 .login-input:focus {
-  border-color: #0066ff !important;
-  background: rgba(4, 9, 20, 0.95) !important;
-  box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.3) !important;
+  border-color: #22c55e !important;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.25) !important;
 }
 
 .login-btn {
-  background: linear-gradient(135deg, #0066ff 0%, #004ecc 100%) !important;
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%) !important;
   border: none !important;
-  font-weight: 700 !important;
+  font-weight: 800 !important;
   letter-spacing: 0.5px !important;
   border-radius: 12px !important;
-  padding: 13px 20px !important;
-  box-shadow: 0 6px 20px rgba(0, 102, 255, 0.4) !important;
-  transition: all 0.25s ease !important;
+  box-shadow: 0 6px 20px rgba(34, 197, 94, 0.35) !important;
 }
 
 .login-btn:hover {
-  background: linear-gradient(135deg, #1a7bff 0%, #005ce6 100%) !important;
-  box-shadow: 0 8px 25px rgba(0, 102, 255, 0.6) !important;
-  transform: translateY(-1px);
+  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%) !important;
+  box-shadow: 0 8px 25px rgba(34, 197, 94, 0.5) !important;
 }
 
 /* ─── BOTTOM SCROLL INDICATOR ─── */

@@ -28,14 +28,14 @@ export interface TenantBranding {
 
 export const gercepinBranding: TenantBranding = {
   id: 'gercepin',
-  name: 'PT Gerak Cepat Indonesia',
-  sidebarTitle: 'GERCEPIN AJA',
-  sidebarSubtitle: 'PT Gerak Cepat Indonesia',
-  browserTitle: 'Gercepin Aja — PT Gerak Cepat Indonesia',
-  logoText: 'G',
-  logoSub: 'GERCEPIN AJA',
-  logoBg: 'linear-gradient(135deg, #3d7a7a 0%, #2d5f5f 100%)',
-  logoImage: '/logo-gercepin.png',   // Actual Gercepin logo (bird + text)
+  name: 'VARDH',
+  sidebarTitle: 'VARDH',
+  sidebarSubtitle: 'Technology. Systems. Growth.',
+  browserTitle: 'VARDH — Transport Management System',
+  logoText: 'V',
+  logoSub: 'VARDH',
+  logoBg: 'linear-gradient(135deg, #0066ff 0%, #0c182b 100%)',
+  logoImage: '/logo-vardh.png',   // VARDH logo
 
   modules: {
     finance: true,
