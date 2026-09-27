@@ -54,13 +54,14 @@ export default function Login() {
         {/* Left Hero Content */}
         <div className="gercep-hero-left">
           <h1 className="gercep-hero-headline">
-            <span className="gercep-white-text">DELIVER</span>{' '}
-            <span className="gercep-smiles-text">SMILES</span><br />
-            <span className="gercep-white-text">TO EVERY DESTINATION</span>
+            <span className="gercep-white-text">MOVE WITH</span>{' '}
+            <span className="gercep-smiles-text">PURPOSE.</span><br />
+            <span className="gercep-white-text">GROW WITH</span>{' '}
+            <span className="gercep-smiles-text">VARDH</span>
           </h1>
 
           <p className="gercep-hero-description">
-            We don't just deliver goods, we deliver trust, efficiency, and smiles at
+            We don't just deliver goods, we deliver trust, efficiency, and growth at
             every destination. Experience the modern standard of logistics.
           </p>
         </div>
