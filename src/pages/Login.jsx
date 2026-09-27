@@ -39,12 +39,16 @@ export default function Login() {
       {/* Top Navbar */}
       <header className="gercep-navbar">
         <div className="gercep-nav-brand">
-          <div className="gercep-logo-pill">
+          <div className="vardh-nav-brand">
             <img
-              src="/logo-vardh.png"
+              src="/vardh-v-emblem.png"
               alt="VARDH"
-              className="gercep-logo-img"
+              className="vardh-nav-icon"
             />
+            <div className="vardh-nav-text">
+              <span className="vardh-nav-title">VARDH</span>
+              <span className="vardh-nav-subtitle">Technology. Systems. Growth.</span>
+            </div>
           </div>
         </div>
       </header>

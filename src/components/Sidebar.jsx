@@ -100,38 +100,17 @@ export default function Sidebar() {
     <aside className="sidebar">
       {/* Logo */}
       <div className="sidebar-logo">
-        {branding.logoImage ? (
-          /* Tenant has actual logo image */
-          <div className="sidebar-logo-card">
-            <img
-              src={branding.logoImage}
-              alt={branding.sidebarTitle}
-              className="sidebar-logo-img"
-            />
+        <div className="vardh-sidebar-brand">
+          <img
+            src="/vardh-v-emblem.png"
+            alt={branding.sidebarTitle || 'VARDH'}
+            className="vardh-sidebar-icon"
+          />
+          <div className="vardh-sidebar-text">
+            <span className="vardh-sidebar-title">VARDH</span>
+            <span className="vardh-sidebar-subtitle">Technology. Systems. Growth.</span>
           </div>
-        ) : (
-          /* Fallback: letter avatar + text */
-          <>
-            <div
-              className="sidebar-logo-icon"
-              style={{
-                background: branding.logoBg,
-                border: '1px solid rgba(255,255,255,0.3)',
-                fontSize: 18,
-                fontWeight: 800,
-                color: '#fff',
-                fontFamily: 'var(--font-heading)',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-              }}
-            >
-              {branding.logoText}
-            </div>
-            <div>
-              <div className="sidebar-logo-title">{branding.sidebarTitle}</div>
-              <div className="sidebar-logo-sub">{branding.sidebarSubtitle}</div>
-            </div>
-          </>
-        )}
+        </div>
       </div>
 
       {/* Navigation */}

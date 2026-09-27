@@ -38,26 +38,53 @@
   gap: 12px;
 }
 
-.gercep-logo-pill {
-  background: #ffffff;
-  padding: 6px 16px;
-  border-radius: 10px;
-  display: inline-flex;
+.vardh-nav-brand {
+  display: flex;
   align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+  gap: 16px;
+  background: transparent;
+  padding: 4px 0;
+  text-decoration: none;
+  cursor: default;
   transition: transform 0.25s ease;
 }
 
-.gercep-logo-pill:hover {
-  transform: scale(1.02);
+.vardh-nav-brand:hover {
+  transform: translateY(-1px);
 }
 
-.gercep-logo-img {
-  height: 40px;
+.vardh-nav-icon {
+  height: 56px;
   width: auto;
   object-fit: contain;
+  filter: drop-shadow(0 4px 16px rgba(0, 102, 255, 0.4)) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.8));
   transition: transform 0.3s ease;
+}
+
+.vardh-nav-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.vardh-nav-title {
+  font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+  font-size: 34px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: #ffffff;
+  line-height: 1;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.95), 0 2px 8px rgba(0, 0, 0, 0.95);
+}
+
+.vardh-nav-subtitle {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #38bdf8;
+  margin-top: 5px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.95);
 }
 
 /* ─── HERO CONTAINER ─── */
