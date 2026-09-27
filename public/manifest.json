@@ -1,12 +1,17 @@
 {
-  "short_name": "TMS Gercepin",
-  "name": "TMS Gercepin � Transport Management System",
+  "short_name": "VARDH TMS",
+  "name": "VARDH — Transport Management System",
   "icons": [
     {
-      "src": "/logo-gercepin.png",
+      "src": "/favicon.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
     }
   ],
   "start_url": "/",
@@ -14,5 +19,5 @@
   "theme_color": "#0f172a",
   "display": "standalone",
   "orientation": "portrait",
-  "description": "Aplikasi Sistem Manajemen Transportasi & Logistik PT Gerak Cepat Indonesia"
+  "description": "VARDH — Technology. Systems. Growth. Intelligent Transport Management System."
 }

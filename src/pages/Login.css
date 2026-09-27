@@ -6,7 +6,7 @@
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
-  background: #090d16 url('/gercep-hero-bg.jpg') center/cover no-repeat fixed;
+  background: #090d16 url('/vardh-hero-bg.jpg') center/cover no-repeat fixed;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   color: #ffffff;
 }
