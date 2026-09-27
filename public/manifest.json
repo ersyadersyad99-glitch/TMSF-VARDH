@@ -1,0 +1,18 @@
+{
+  "short_name": "TMS Gercepin",
+  "name": "TMS Gercepin — Transport Management System",
+  "icons": [
+    {
+      "src": "/logo-gercepin.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "display": "standalone",
+  "orientation": "portrait",
+  "description": "Aplikasi Sistem Manajemen Transportasi & Logistik PT Gerak Cepat Indonesia"
+}

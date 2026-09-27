@@ -1,0 +1,12 @@
+{
+  "appId": "net.digitalinaja.tmsgercepin",
+  "appName": "TMS Gercepin",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https",
+    "allowNavigation": [
+      "tmsgercepin.digitalinaja.net",
+      "api-tmsgercepin.digitalinaja.net"
+    ]
+  }
+}
