@@ -3,9 +3,9 @@
   top: 0; left: 0;
   width: var(--sidebar-width);
   height: 100vh;
-  background: linear-gradient(180deg, #2d5f5f 0%, #1e4545 100%);
-  border-right: none;
-  box-shadow: 4px 0 20px rgba(29,69,69,0.25);
+  background: var(--color-bg-sidebar, #f8fafc);
+  border-right: 1px solid #e2e8f0;
+  box-shadow: 2px 0 12px rgba(15, 23, 42, 0.04);
   display: flex;
   flex-direction: column;
   z-index: 100;
@@ -13,11 +13,26 @@
 }
 
 .sidebar-logo {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 18px 16px 16px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  gap: 12px;
+  padding: 20px 18px 18px;
+  border-bottom: 1px solid #e2e8f0;
+  background: #ffffff;
+}
+
+/* Garis pembatas estetik di bawah logo VARDH dengan gradien warna brand VARDH */
+.sidebar-logo::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 18px;
+  right: 18px;
+  height: 2px;
+  background: linear-gradient(90deg, #0066ff 0%, #00d2d3 50%, #10b981 100%);
+  border-radius: 999px;
+  box-shadow: 0 1px 4px rgba(0, 102, 255, 0.25);
 }
 
 .vardh-sidebar-brand {
@@ -28,15 +43,15 @@
 }
 
 .vardh-sidebar-icon {
-  height: 42px;
+  height: 44px;
   width: auto;
   object-fit: contain;
-  filter: drop-shadow(0 3px 10px rgba(0, 102, 255, 0.45));
+  filter: drop-shadow(0 2px 8px rgba(0, 102, 255, 0.35));
   transition: transform 0.2s ease;
 }
 
 .vardh-sidebar-icon:hover {
-  transform: scale(1.05);
+  transform: scale(1.04);
 }
 
 .vardh-sidebar-text {
@@ -49,41 +64,22 @@
   font-size: 21px;
   font-weight: 900;
   letter-spacing: 1.5px;
-  color: #ffffff;
+  color: #0a1931;
   line-height: 1.1;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
 .vardh-sidebar-subtitle {
-  font-size: 9px;
+  font-size: 9.5px;
   font-weight: 700;
   letter-spacing: 0.8px;
-  color: #38bdf8;
+  color: #0066ff;
   text-transform: uppercase;
   margin-top: 3px;
 }
 
-.sidebar-logo-img:hover {
-  transform: scale(1.02);
-}
-
-.sidebar-logo-title {
-  font-family: var(--font-heading);
-  font-size: 16px;
-  font-weight: 800;
-  color: #ffffff;
-  letter-spacing: 1px;
-}
-
-.sidebar-logo-sub {
-  font-size: 10px;
-  color: rgba(255,255,255,0.55);
-  letter-spacing: 0.5px;
-}
-
 .sidebar-nav {
   flex: 1;
-  padding: 10px 8px;
+  padding: 12px 10px;
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -93,77 +89,63 @@
   display: flex;
   flex-direction: column;
   gap: 1px;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .sidebar-group-label {
   font-size: 10px;
-  font-weight: 600;
-  color: rgba(255,255,255,0.45);
+  font-weight: 700;
+  color: #94a3b8;
   text-transform: uppercase;
-  letter-spacing: 0.8px;
-  padding: 8px 10px 4px;
+  letter-spacing: 1px;
+  padding: 10px 12px 4px;
 }
 
 .sidebar-link {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 8px 12px;
-  border-radius: var(--radius-sm);
-  color: rgba(255,255,255,0.7);
-  font-size: 13px;
+  padding: 9px 12px;
+  border-radius: var(--radius-md);
+  color: #475569;
+  font-size: 13.5px;
   font-weight: 500;
   text-decoration: none;
   transition: all var(--transition-fast);
   border: 1px solid transparent;
 }
 
+.sidebar-link svg {
+  color: #64748b;
+  transition: color var(--transition-fast);
+}
+
 .sidebar-link:hover {
-  background: rgba(255,255,255,0.1);
-  color: #ffffff;
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.sidebar-link:hover svg {
+  color: #0066ff;
 }
 
 .sidebar-link.active {
-  background: rgba(255,255,255,0.18);
-  color: #ffffff;
-  border-color: rgba(255,255,255,0.25);
+  background: linear-gradient(135deg, #0066ff 0%, #0052cc 100%);
+  color: #ffffff !important;
+  border-color: transparent;
   font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 102, 255, 0.28);
 }
 
 .sidebar-link.active svg {
-  color: #ffffff;
-}
-
-.sidebar-user {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 14px 16px;
-  border-top: 1px solid var(--color-border);
-  margin-top: auto;
-}
-
-.sidebar-user-avatar {
-  width: 32px; height: 32px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--color-primary), #818cf8);
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 700;
-  font-size: 13px;
-  color: #fff;
-  flex-shrink: 0;
-}
-
-.sidebar-user-name {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-primary);
+  color: #ffffff !important;
 }
 
 .sidebar-user-section {
-  border-top: 1px solid rgba(255,255,255,0.12);
-  padding: 10px 8px 12px;
+  border-top: 1px solid #e2e8f0;
+  background: #ffffff;
+  padding: 12px 10px 14px;
+  margin-top: auto;
 }
 
 .sidebar-role-badge {
@@ -171,42 +153,45 @@
   align-items: center;
   gap: 5px;
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  padding: 3px 8px;
+  padding: 3px 9px;
   border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.25);
-  color: rgba(255,255,255,0.8);
-  background: rgba(255,255,255,0.1);
-  margin: 0 8px 8px;
+  border: 1px solid #bfdbfe;
+  color: #0284c7;
+  background: #eff6ff;
+  margin: 0 6px 8px;
 }
 
 .sidebar-user {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px;
+  gap: 10px;
+  padding: 8px 10px;
   border-radius: var(--radius-md);
   transition: background var(--transition-fast);
 }
-.sidebar-user:hover { background: rgba(255,255,255,0.08); }
+
+.sidebar-user:hover {
+  background: #f1f5f9;
+}
 
 .sidebar-user-avatar {
-  width: 32px; height: 32px;
+  width: 34px; height: 34px;
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   font-weight: 700;
   font-size: 13px;
   color: #fff;
   flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .sidebar-user-name {
   font-size: 13px;
   font-weight: 600;
-  color: #ffffff;
+  color: #0f172a;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -214,22 +199,23 @@
 
 .sidebar-user-role {
   font-size: 11px;
-  color: rgba(255,255,255,0.5);
+  color: #64748b;
 }
 
 .sidebar-logout-btn {
   background: transparent;
   border: none;
-  color: rgba(255,255,255,0.5);
+  color: #94a3b8;
   cursor: pointer;
-  padding: 5px;
+  padding: 6px;
   border-radius: var(--radius-sm);
   display: flex; align-items: center;
   flex-shrink: 0;
   transition: all var(--transition-fast);
 }
+
 .sidebar-logout-btn:hover {
-  background: rgba(220,38,38,0.2);
-  color: #fca5a5;
+  background: #fee2e2;
+  color: #ef4444;
 }
 

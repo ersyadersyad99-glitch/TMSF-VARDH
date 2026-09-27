@@ -20,7 +20,7 @@ export const vardhBranding: TenantBranding = {
     primaryHover: '#0052cc',
     primaryDim: 'rgba(0, 102, 255, 0.10)',
     primaryGlow: 'rgba(0, 102, 255, 0.25)',
-    sidebarBg: '#0c182b',
+    sidebarBg: '#f8fafc',
     bgBase: '#f1f5f9',
     textPrimary: '#0a1931',
   },
