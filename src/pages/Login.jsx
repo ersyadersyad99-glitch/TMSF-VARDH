@@ -94,7 +94,7 @@ export default function Login() {
                   id="login-email"
                   type="text"
                   className="form-input login-input"
-                  placeholder="Ersyad.Gercepin atau Ersyad.DAM"
+                  placeholder=""
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   required
