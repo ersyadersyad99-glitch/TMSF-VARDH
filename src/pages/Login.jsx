@@ -59,9 +59,9 @@ export default function Login() {
         <div className="gercep-hero-left">
           <h1 className="gercep-hero-headline">
             <span className="gercep-white-text">MOVE WITH</span>{' '}
-            <span className="gercep-smiles-text">PURPOSE.</span><br />
+            <span className="vardh-blue-text">PURPOSE.</span><br />
             <span className="gercep-white-text">GROW WITH</span>{' '}
-            <span className="gercep-smiles-text">VARDH</span>
+            <span className="vardh-orange-text">VARDH</span>
           </h1>
 
           <p className="gercep-hero-description">
