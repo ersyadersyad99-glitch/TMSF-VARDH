@@ -13,7 +13,7 @@ export const getUploadUrl = (filename) => {
 };
 
 /** Base headers included with every API call, dynamically resolving active tenant */
-const getHeaders = () => ({
+export const getHeaders = () => ({
   'Content-Type': 'application/json',
   'X-Tenant': getActiveTenantId(),
 });

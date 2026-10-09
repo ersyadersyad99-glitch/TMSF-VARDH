@@ -10,3 +10,4 @@ export * from './invoices.js';
 export * from './travel_funds.js';
 export * from './vendors.js';
 export * from './uploads.js';
+export * from './gps.js';

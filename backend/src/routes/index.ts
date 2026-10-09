@@ -10,6 +10,7 @@ import fleetRoutes        from './master/fleet.routes.js';
 import vendorsRoutes      from './master/vendors.routes.js';
 import locationsRoutes    from './master/locations.routes.js';
 import usersRoutes        from './users.routes.js';
+import gpsRoutes          from '../gps/gps.routes.js';
 
 const router = Router();
 
@@ -24,5 +25,6 @@ router.use('/master/fleet',   fleetRoutes);
 router.use('/master/vendors', vendorsRoutes);
 router.use('/master/locations', locationsRoutes);
 router.use('/users',          usersRoutes);
+router.use('/gps',            gpsRoutes);
 
 export default router;

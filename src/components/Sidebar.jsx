@@ -37,7 +37,7 @@ const navGroups = [
   {
     label: 'Master Data',
     items: [
-      { to: '/master/locations', icon: MapPin, label: 'Lokasi', permission: 'locations.read' },
+      { to: '/master/locations', icon: MapPin, label: 'GPS Tracking & Lokasi', permission: 'locations.read' },
       { to: '/master/clients', icon: Building2, label: 'Klien', permission: 'clients.read' },
       { to: '/master/fleet', icon: Truck, label: 'Armada Vendor', module: 'fleet', permission: 'fleet.read' },
       { to: '/master/maintenance', icon: Wrench, label: 'Perawatan Armada', module: 'maintenance', permission: 'fleet.read' },
