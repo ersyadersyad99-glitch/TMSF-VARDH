@@ -1,7 +1,16 @@
 import type { DB } from '../db/index.js';
-import { fleet, gpsDevices, gpsProviders, gpsLocationHistory } from '../db/schema/index.js';
+import { fleet, gpsDevices, gpsProviders, gpsLocationHistory, vendorTrackingLinks } from '../db/schema/index.js';
 import { eq, desc, and, gte, lte } from 'drizzle-orm';
-import type { NormalizedGPSLocation, RawGPSPayload, VehicleGpsStatus, GPSLocationHistoryItem } from './gps.types.js';
+import type {
+  NormalizedGPSLocation,
+  RawGPSPayload,
+  VehicleGpsStatus,
+  GPSLocationHistoryItem,
+  VendorTrackingLinkItem,
+  CreateTrackingLinkDTO,
+  UpdateTrackingLinkDTO,
+  TrackingLinkStatus
+} from './gps.types.js';
 import { DemoSimulatorGPSProvider } from './gps.provider.js';
 
 const OFFLINE_THRESHOLD_MS = 10 * 60 * 1000; // 10 minutes
@@ -258,5 +267,226 @@ export const gpsService = {
       });
 
     return created;
+  },
+
+  /**
+   * Retrieves all vendor external tracking links for current tenant with search & filter
+   */
+  async getTrackingLinks(
+    db: DB,
+    options?: { search?: string; status?: string; doReference?: string }
+  ): Promise<VendorTrackingLinkItem[]> {
+    const conditions: any[] = [];
+    if (options?.status && options.status !== 'ALL') {
+      conditions.push(eq(vendorTrackingLinks.status, options.status));
+    }
+    if (options?.doReference) {
+      conditions.push(eq(vendorTrackingLinks.doReference, options.doReference));
+    }
+
+    let rows = await db
+      .select()
+      .from(vendorTrackingLinks)
+      .where(conditions.length > 0 ? and(...conditions) : undefined)
+      .orderBy(desc(vendorTrackingLinks.createdAt));
+
+    // Filter in-memory for multi-column search
+    const searchTerm = options?.search?.toLowerCase().trim();
+    if (searchTerm) {
+      rows = rows.filter((r) =>
+        r.vendorName?.toLowerCase().includes(searchTerm) ||
+        r.doReference?.toLowerCase().includes(searchTerm) ||
+        r.vehiclePlate?.toLowerCase().includes(searchTerm) ||
+        r.driverName?.toLowerCase().includes(searchTerm)
+      );
+    }
+
+    const now = new Date();
+    return rows.map((r) => {
+      const isExpired = Boolean(r.expiresAt && new Date(r.expiresAt) < now && r.status === 'ACTIVE');
+      return {
+        id: r.id,
+        vendorId: r.vendorId,
+        vendorName: r.vendorName,
+        doReference: r.doReference,
+        vehiclePlate: r.vehiclePlate,
+        fleetId: r.fleetId,
+        driverName: r.driverName,
+        trackingUrl: r.trackingUrl,
+        expiresAt: r.expiresAt ? new Date(r.expiresAt).toISOString() : null,
+        isExpired,
+        status: isExpired ? 'EXPIRED' : (r.status as TrackingLinkStatus),
+        notes: r.notes,
+        createdBy: r.createdBy,
+        createdAt: new Date(r.createdAt).toISOString(),
+        updatedAt: new Date(r.updatedAt).toISOString(),
+      };
+    });
+  },
+
+  /**
+   * Retrieves a single vendor external tracking link by ID
+   */
+  async getTrackingLinkById(db: DB, id: string): Promise<VendorTrackingLinkItem | null> {
+    const [row] = await db
+      .select()
+      .from(vendorTrackingLinks)
+      .where(eq(vendorTrackingLinks.id, id))
+      .limit(1);
+
+    if (!row) return null;
+    const now = new Date();
+    const isExpired = Boolean(row.expiresAt && new Date(row.expiresAt) < now && row.status === 'ACTIVE');
+    return {
+      id: row.id,
+      vendorId: row.vendorId,
+      vendorName: row.vendorName,
+      doReference: row.doReference,
+      vehiclePlate: row.vehiclePlate,
+      fleetId: row.fleetId,
+      driverName: row.driverName,
+      trackingUrl: row.trackingUrl,
+      expiresAt: row.expiresAt ? new Date(row.expiresAt).toISOString() : null,
+      isExpired,
+      status: isExpired ? 'EXPIRED' : (row.status as TrackingLinkStatus),
+      notes: row.notes,
+      createdBy: row.createdBy,
+      createdAt: new Date(row.createdAt).toISOString(),
+      updatedAt: new Date(row.updatedAt).toISOString(),
+    };
+  },
+
+  /**
+   * Creates a new vendor external tracking link
+   */
+  async createTrackingLink(
+    db: DB,
+    input: CreateTrackingLinkDTO,
+    createdBy?: string
+  ): Promise<VendorTrackingLinkItem> {
+    let cleanUrl = input.trackingUrl.trim();
+    if (!/^https?:\/\//i.test(cleanUrl)) {
+      cleanUrl = `https://${cleanUrl}`;
+    }
+    const parsedUrl = new URL(cleanUrl);
+    if (parsedUrl.protocol !== 'http:' && parsedUrl.protocol !== 'https:') {
+      throw new Error('URL tracking harus menggunakan protokol HTTP atau HTTPS yang aman');
+    }
+
+    const ts = Date.now().toString(36).toUpperCase();
+    const rand = Math.random().toString(36).substring(2, 6).toUpperCase();
+    const id = `VTL-${ts}-${rand}`;
+    const expiresAt = input.expiresAt ? new Date(input.expiresAt) : null;
+
+    const [row] = await db
+      .insert(vendorTrackingLinks)
+      .values({
+        id,
+        vendorId: input.vendorId || null,
+        vendorName: input.vendorName.trim(),
+        doReference: input.doReference?.trim() || null,
+        vehiclePlate: input.vehiclePlate.trim().toUpperCase(),
+        fleetId: input.fleetId || null,
+        driverName: input.driverName?.trim() || null,
+        trackingUrl: cleanUrl,
+        expiresAt,
+        status: input.status || 'ACTIVE',
+        notes: input.notes?.trim() || null,
+        createdBy: createdBy || null,
+      })
+      .returning();
+
+    const now = new Date();
+    const isExpired = Boolean(row.expiresAt && new Date(row.expiresAt) < now && row.status === 'ACTIVE');
+    return {
+      id: row.id,
+      vendorId: row.vendorId,
+      vendorName: row.vendorName,
+      doReference: row.doReference,
+      vehiclePlate: row.vehiclePlate,
+      fleetId: row.fleetId,
+      driverName: row.driverName,
+      trackingUrl: row.trackingUrl,
+      expiresAt: row.expiresAt ? new Date(row.expiresAt).toISOString() : null,
+      isExpired,
+      status: isExpired ? 'EXPIRED' : (row.status as TrackingLinkStatus),
+      notes: row.notes,
+      createdBy: row.createdBy,
+      createdAt: new Date(row.createdAt).toISOString(),
+      updatedAt: new Date(row.updatedAt).toISOString(),
+    };
+  },
+
+  /**
+   * Updates an existing vendor external tracking link
+   */
+  async updateTrackingLink(
+    db: DB,
+    id: string,
+    input: UpdateTrackingLinkDTO
+  ): Promise<VendorTrackingLinkItem | null> {
+    const updatePayload: Record<string, any> = {
+      updatedAt: new Date(),
+    };
+
+    if (input.vendorName !== undefined) updatePayload.vendorName = input.vendorName.trim();
+    if (input.vendorId !== undefined) updatePayload.vendorId = input.vendorId || null;
+    if (input.doReference !== undefined) updatePayload.doReference = input.doReference?.trim() || null;
+    if (input.vehiclePlate !== undefined) updatePayload.vehiclePlate = input.vehiclePlate.trim().toUpperCase();
+    if (input.fleetId !== undefined) updatePayload.fleetId = input.fleetId || null;
+    if (input.driverName !== undefined) updatePayload.driverName = input.driverName?.trim() || null;
+    if (input.trackingUrl !== undefined) {
+      let cleanUrl = input.trackingUrl.trim();
+      if (!/^https?:\/\//i.test(cleanUrl)) {
+        cleanUrl = `https://${cleanUrl}`;
+      }
+      const parsedUrl = new URL(cleanUrl);
+      if (parsedUrl.protocol !== 'http:' && parsedUrl.protocol !== 'https:') {
+        throw new Error('URL tracking harus menggunakan protokol HTTP atau HTTPS yang aman');
+      }
+      updatePayload.trackingUrl = cleanUrl;
+    }
+    if (input.expiresAt !== undefined) updatePayload.expiresAt = input.expiresAt ? new Date(input.expiresAt) : null;
+    if (input.status !== undefined) updatePayload.status = input.status;
+    if (input.notes !== undefined) updatePayload.notes = input.notes?.trim() || null;
+
+    const [row] = await db
+      .update(vendorTrackingLinks)
+      .set(updatePayload)
+      .where(eq(vendorTrackingLinks.id, id))
+      .returning();
+
+    if (!row) return null;
+    const now = new Date();
+    const isExpired = Boolean(row.expiresAt && new Date(row.expiresAt) < now && row.status === 'ACTIVE');
+    return {
+      id: row.id,
+      vendorId: row.vendorId,
+      vendorName: row.vendorName,
+      doReference: row.doReference,
+      vehiclePlate: row.vehiclePlate,
+      fleetId: row.fleetId,
+      driverName: row.driverName,
+      trackingUrl: row.trackingUrl,
+      expiresAt: row.expiresAt ? new Date(row.expiresAt).toISOString() : null,
+      isExpired,
+      status: isExpired ? 'EXPIRED' : (row.status as TrackingLinkStatus),
+      notes: row.notes,
+      createdBy: row.createdBy,
+      createdAt: new Date(row.createdAt).toISOString(),
+      updatedAt: new Date(row.updatedAt).toISOString(),
+    };
+  },
+
+  /**
+   * Deletes a vendor external tracking link
+   */
+  async deleteTrackingLink(db: DB, id: string): Promise<boolean> {
+    const result = await db
+      .delete(vendorTrackingLinks)
+      .where(eq(vendorTrackingLinks.id, id))
+      .returning({ id: vendorTrackingLinks.id });
+
+    return result.length > 0;
   },
 };

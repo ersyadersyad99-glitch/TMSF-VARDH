@@ -46,3 +46,50 @@ export interface GPSProviderConfig {
   pollingIntervalSec: number;
   // NOTE: apiToken is deliberately omitted from this public interface
 }
+
+export type TrackingLinkStatus = 'ACTIVE' | 'EXPIRED' | 'COMPLETED' | 'INACTIVE';
+
+export interface VendorTrackingLinkItem {
+  id: string;
+  vendorId?: string | null;
+  vendorName: string;
+  doReference?: string | null;
+  vehiclePlate: string;
+  fleetId?: string | null;
+  driverName?: string | null;
+  trackingUrl: string;
+  expiresAt?: string | null;
+  isExpired: boolean;
+  status: TrackingLinkStatus;
+  notes?: string | null;
+  createdBy?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateTrackingLinkDTO {
+  vendorId?: string | null;
+  vendorName: string;
+  doReference?: string | null;
+  vehiclePlate: string;
+  fleetId?: string | null;
+  driverName?: string | null;
+  trackingUrl: string;
+  expiresAt?: string | null;
+  status?: TrackingLinkStatus;
+  notes?: string | null;
+}
+
+export interface UpdateTrackingLinkDTO {
+  vendorId?: string | null;
+  vendorName?: string;
+  doReference?: string | null;
+  vehiclePlate?: string;
+  fleetId?: string | null;
+  driverName?: string | null;
+  trackingUrl?: string;
+  expiresAt?: string | null;
+  status?: TrackingLinkStatus;
+  notes?: string | null;
+}
+

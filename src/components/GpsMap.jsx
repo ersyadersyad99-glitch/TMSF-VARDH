@@ -10,31 +10,89 @@ const STATUS_COLORS = {
   OFFLINE: { bg: '#64748b', border: '#475569', text: '#ffffff', label: 'Offline' },
 };
 
-const DEFAULT_MAP_STYLE = {
-  version: 8,
-  sources: {
-    'carto-voyager': {
-      type: 'raster',
-      tiles: [
-        'https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png',
-        'https://b.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png',
-        'https://c.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png',
-        'https://d.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png',
+const buildMapStyle = () => {
+  const cartoApiKey = import.meta.env.VITE_CARTO_API_KEY;
+  const customTileUrl = import.meta.env.VITE_MAP_TILE_URL;
+
+  // 1. CARTO with authorized key
+  if (cartoApiKey) {
+    return {
+      version: 8,
+      sources: {
+        'carto-voyager': {
+          type: 'raster',
+          tiles: [
+            `https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png?api_key=${cartoApiKey}`,
+            `https://b.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png?api_key=${cartoApiKey}`,
+            `https://c.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png?api_key=${cartoApiKey}`,
+            `https://d.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png?api_key=${cartoApiKey}`,
+          ],
+          tileSize: 256,
+          attribution: '© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors, © <a href="https://carto.com/attributions" target="_blank" rel="noreferrer">CARTO</a>',
+        },
+      },
+      layers: [
+        {
+          id: 'carto-voyager-layer',
+          type: 'raster',
+          source: 'carto-voyager',
+          minzoom: 0,
+          maxzoom: 19,
+        },
       ],
-      tileSize: 256,
-      attribution: '© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors, © <a href="https://carto.com/attributions" target="_blank" rel="noreferrer">CARTO</a>',
+    };
+  }
+
+  // 2. Custom tile URL from environment
+  if (customTileUrl) {
+    return {
+      version: 8,
+      sources: {
+        'custom-basemap': {
+          type: 'raster',
+          tiles: [customTileUrl],
+          tileSize: 256,
+          attribution: '© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors',
+        },
+      },
+      layers: [
+        {
+          id: 'custom-basemap-layer',
+          type: 'raster',
+          source: 'custom-basemap',
+          minzoom: 0,
+          maxzoom: 19,
+        },
+      ],
+    };
+  }
+
+  // 3. OpenStreetMap Standard Tiles (No API key needed, zero watermark, 100% legal for commercial SaaS)
+  return {
+    version: 8,
+    sources: {
+      'osm-tiles': {
+        type: 'raster',
+        tiles: [
+          'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+        ],
+        tileSize: 256,
+        attribution: '© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors',
+      },
     },
-  },
-  layers: [
-    {
-      id: 'carto-voyager-layer',
-      type: 'raster',
-      source: 'carto-voyager',
-      minzoom: 0,
-      maxzoom: 19,
-    },
-  ],
+    layers: [
+      {
+        id: 'osm-tiles-layer',
+        type: 'raster',
+        source: 'osm-tiles',
+        minzoom: 0,
+        maxzoom: 19,
+      },
+    ],
+  };
 };
+
+const DEFAULT_MAP_STYLE = buildMapStyle();
 
 export default function GpsMap({
   vehicles = [],

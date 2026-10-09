@@ -1,5 +1,6 @@
 import { pgTable, uuid, varchar, text, timestamp, boolean, integer, doublePrecision, real } from 'drizzle-orm/pg-core';
 import { fleet } from './fleet.js';
+import { vendors } from './vendors.js';
 
 /**
  * GPS Providers configuration table
@@ -69,3 +70,29 @@ export type NewGpsDevice = typeof gpsDevices.$inferInsert;
 
 export type GpsLocationHistory = typeof gpsLocationHistory.$inferSelect;
 export type NewGpsLocationHistory = typeof gpsLocationHistory.$inferInsert;
+
+/**
+ * Vendor External Tracking Links table
+ * Third-party vendors only provide a tracking URL.
+ * Does not fake GPS coordinates.
+ */
+export const vendorTrackingLinks = pgTable('vendor_tracking_links', {
+  id:           varchar('id', { length: 50 }).primaryKey(),
+  vendorId:     varchar('vendor_id', { length: 50 }).references(() => vendors.id, { onDelete: 'set null' }),
+  vendorName:   varchar('vendor_name', { length: 150 }).notNull(),
+  doReference:  varchar('do_reference', { length: 50 }),
+  vehiclePlate: varchar('vehicle_plate', { length: 50 }).notNull(),
+  fleetId:      varchar('fleet_id', { length: 50 }).references(() => fleet.id, { onDelete: 'set null' }),
+  driverName:   varchar('driver_name', { length: 150 }),
+  trackingUrl:  text('tracking_url').notNull(),
+  expiresAt:    timestamp('expires_at'),
+  status:       varchar('status', { length: 30 }).notNull().default('ACTIVE'), // ACTIVE, EXPIRED, COMPLETED, INACTIVE
+  notes:        text('notes'),
+  createdBy:    text('created_by'),
+  createdAt:    timestamp('created_at').notNull().defaultNow(),
+  updatedAt:    timestamp('updated_at').notNull().defaultNow(),
+});
+
+export type VendorTrackingLink = typeof vendorTrackingLinks.$inferSelect;
+export type NewVendorTrackingLink = typeof vendorTrackingLinks.$inferInsert;
+

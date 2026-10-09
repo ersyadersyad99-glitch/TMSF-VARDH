@@ -27,6 +27,32 @@ export const registerProviderSchema = z.object({
   pollingIntervalSec: z.number().min(5).max(3600).optional().default(30),
 });
 
+export const createTrackingLinkSchema = z.object({
+  vendorId:     z.string().optional(),
+  vendorName:   z.string().min(1, 'Nama vendor wajib diisi'),
+  doReference:  z.string().optional(),
+  vehiclePlate: z.string().min(1, 'Plat nomor armada wajib diisi'),
+  fleetId:      z.string().optional(),
+  driverName:   z.string().optional(),
+  trackingUrl:  z.string().min(3, 'URL tracking vendor wajib diisi'),
+  expiresAt:    z.string().nullable().optional(),
+  status:       z.enum(['ACTIVE', 'EXPIRED', 'COMPLETED', 'INACTIVE']).optional().default('ACTIVE'),
+  notes:        z.string().optional(),
+});
+
+export const updateTrackingLinkSchema = z.object({
+  vendorId:     z.string().nullable().optional(),
+  vendorName:   z.string().min(1).optional(),
+  doReference:  z.string().nullable().optional(),
+  vehiclePlate: z.string().min(1).optional(),
+  fleetId:      z.string().nullable().optional(),
+  driverName:   z.string().nullable().optional(),
+  trackingUrl:  z.string().min(3).optional(),
+  expiresAt:    z.string().nullable().optional(),
+  status:       z.enum(['ACTIVE', 'EXPIRED', 'COMPLETED', 'INACTIVE']).optional(),
+  notes:        z.string().nullable().optional(),
+});
+
 export const gpsController = {
   async getVehicles(req: Request, res: Response, next: NextFunction) {
     try {
@@ -102,6 +128,72 @@ export const gpsController = {
         simulatorActive: DemoSimulatorGPSProvider.isEnabled(),
         message: `GPS Demo Simulator is now ${DemoSimulatorGPSProvider.isEnabled() ? 'ENABLED' : 'DISABLED'}`,
       });
+    } catch (err) { next(err); }
+  },
+
+  async getTrackingLinks(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { search, status, doReference } = req.query as {
+        search?: string;
+        status?: string;
+        doReference?: string;
+      };
+      const data = await gpsService.getTrackingLinks(req.db, { search, status, doReference });
+      res.json(data);
+    } catch (err) { next(err); }
+  },
+
+  async getTrackingLinkById(req: Request, res: Response, next: NextFunction) {
+    try {
+      const id = req.params.id as string;
+      const data = await gpsService.getTrackingLinkById(req.db, id);
+      if (!data) {
+        res.status(404).json({ error: 'Vendor tracking link not found' });
+        return;
+      }
+      res.json(data);
+    } catch (err) { next(err); }
+  },
+
+  async createTrackingLink(req: Request, res: Response, next: NextFunction) {
+    try {
+      const parsed = createTrackingLinkSchema.safeParse(req.body);
+      if (!parsed.success) {
+        res.status(400).json({ error: 'Data link tracking tidak valid', details: parsed.error.flatten() });
+        return;
+      }
+      const createdBy = req.user?.id || req.user?.email || undefined;
+      const result = await gpsService.createTrackingLink(req.db, parsed.data, createdBy);
+      res.status(201).json(result);
+    } catch (err) { next(err); }
+  },
+
+  async updateTrackingLink(req: Request, res: Response, next: NextFunction) {
+    try {
+      const id = req.params.id as string;
+      const parsed = updateTrackingLinkSchema.safeParse(req.body);
+      if (!parsed.success) {
+        res.status(400).json({ error: 'Data pembaruan tidak valid', details: parsed.error.flatten() });
+        return;
+      }
+      const result = await gpsService.updateTrackingLink(req.db, id, parsed.data);
+      if (!result) {
+        res.status(404).json({ error: 'Vendor tracking link not found' });
+        return;
+      }
+      res.json(result);
+    } catch (err) { next(err); }
+  },
+
+  async deleteTrackingLink(req: Request, res: Response, next: NextFunction) {
+    try {
+      const id = req.params.id as string;
+      const success = await gpsService.deleteTrackingLink(req.db, id);
+      if (!success) {
+        res.status(404).json({ error: 'Vendor tracking link not found' });
+        return;
+      }
+      res.json({ success: true, message: 'Vendor tracking link deleted' });
     } catch (err) { next(err); }
   },
 };

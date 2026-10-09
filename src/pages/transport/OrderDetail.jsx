@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { Upload, CheckCircle, Clock, AlertTriangle, FileText, X, Printer, Download } from 'lucide-react';
+import {
+  Upload, CheckCircle, Clock, AlertTriangle, FileText, X, Printer, Download,
+  ExternalLink, Copy, Check, Navigation, Plus
+} from 'lucide-react';
 import { useOrderStore, useInvoiceStore, useToastStore } from '../../store';
 import { useTenant } from '../../context/TenantContext';
 import { apiSync, getUploadUrl } from '../../services/api';
+import { gpsApi } from '../../services/gpsApi';
 import {
   formatRupiah, formatDate,
   statusLabels, statusBadgeClass,
@@ -651,6 +655,35 @@ export default function OrderDetail() {
     </div>
   );
 
+  // Vendor Tracking Link State for this DO
+  const [vendorLink, setVendorLink] = useState(null);
+  const [loadingVendorLink, setLoadingVendorLink] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchLink = async () => {
+      setLoadingVendorLink(true);
+      try {
+        const links = await gpsApi.getTrackingLinks({ search: order?.id });
+        if (isMounted) {
+          const match = Array.isArray(links)
+            ? links.find(l => l.doReference === order?.id || (order?.soNumber && l.doReference === order?.soNumber))
+            : null;
+          setVendorLink(match || null);
+        }
+      } catch (err) {
+        console.error('Failed to load tracking link for DO:', err);
+      } finally {
+        if (isMounted) setLoadingVendorLink(false);
+      }
+    };
+    if (order?.id) {
+      fetchLink();
+    }
+    return () => { isMounted = false; };
+  }, [order?.id, order?.soNumber]);
+
   const dpInvoice = invoices.find(inv => inv.orderId === id && inv.type === 'dp');
   const finalInvoice = invoices.find(inv => inv.orderId === id && (inv.type === 'pelunasan' || inv.type === 'top_full'));
   const { done, total, pct } = getDropProgress(order.drops);
@@ -948,6 +981,73 @@ export default function OrderDetail() {
                 </div>
               ))}
             </div>
+          </div>
+
+          {/* External GPS Tracking Link Card */}
+          <div className="card" style={{ border: vendorLink ? '1px solid #c7d2fe' : undefined }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+              <h3 style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.5, display: 'flex', alignItems: 'center', gap: 6 }}>
+                <Navigation size={14} color="var(--color-primary)" /> GPS Tracking Vendor
+              </h3>
+              {vendorLink && (
+                <span className={`badge ${vendorLink.isExpired || vendorLink.status === 'EXPIRED' ? 'badge-waiting' : vendorLink.status === 'ACTIVE' ? 'badge-done' : 'badge-draft'}`} style={{ fontSize: 10 }}>
+                  {vendorLink.isExpired || vendorLink.status === 'EXPIRED' ? 'Expired' : vendorLink.status === 'ACTIVE' ? 'Aktif' : vendorLink.status}
+                </span>
+              )}
+            </div>
+
+            {vendorLink ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                <div style={{ fontSize: 12 }}>
+                  <div style={{ color: 'var(--text-muted)', fontSize: 11 }}>Vendor:</div>
+                  <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{vendorLink.vendorName}</div>
+                </div>
+
+                {vendorLink.vehiclePlate && (
+                  <div style={{ fontSize: 12 }}>
+                    <div style={{ color: 'var(--text-muted)', fontSize: 11 }}>Armada / Driver:</div>
+                    <div>{vendorLink.vehiclePlate} {vendorLink.driverName ? `• ${vendorLink.driverName}` : ''}</div>
+                  </div>
+                )}
+
+                <div style={{ display: 'flex', gap: 6, marginTop: 4 }}>
+                  <button
+                    type="button"
+                    className="btn btn-primary btn-sm"
+                    onClick={() => window.open(vendorLink.trackingUrl, '_blank', 'noopener,noreferrer')}
+                    style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4, fontSize: 11 }}
+                  >
+                    <ExternalLink size={12} /> Buka Tracking
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-secondary btn-sm"
+                    onClick={() => {
+                      navigator.clipboard.writeText(vendorLink.trackingUrl);
+                      setCopiedLink(true);
+                      setTimeout(() => setCopiedLink(false), 2000);
+                      addToast('Tautan tracking berhasil disalin!', 'success');
+                    }}
+                    title="Salin Tautan Tracking"
+                    style={{ padding: '0 8px' }}
+                  >
+                    {copiedLink ? <Check size={12} color="#10b981" /> : <Copy size={12} />}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div style={{ fontSize: 12, color: 'var(--text-muted)', textAlign: 'center', padding: '6px 0' }}>
+                <div style={{ marginBottom: 8, fontSize: 11 }}>Belum ada link tracking GPS eksternal untuk DO ini.</div>
+                <button
+                  type="button"
+                  className="btn btn-secondary btn-sm"
+                  onClick={() => navigate('/master/locations')}
+                  style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, fontSize: 11 }}
+                >
+                  <Plus size={12} /> Daftarkan di Master Lokasi
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Finance */}
