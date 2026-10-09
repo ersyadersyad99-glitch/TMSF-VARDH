@@ -3,9 +3,23 @@
 export const mockClients = [];
 
 export const mockLocations = {
-  provinces: [],
-  cities: {},
-  stores: {},
+  provinces: ['DKI Jakarta', 'Jawa Barat', 'Jawa Tengah', 'Jawa Timur', 'Banten'],
+  cities: {
+    'DKI Jakarta': ['Jakarta Pusat', 'Jakarta Utara', 'Jakarta Barat', 'Jakarta Selatan', 'Jakarta Timur'],
+    'Jawa Barat': ['Kota Bandung', 'Bekasi', 'Bogor', 'Depok', 'Karawang', 'Cirebon'],
+    'Jawa Tengah': ['Semarang', 'Surakarta (Solo)', 'Tegal', 'Pekalongan', 'Magelang'],
+    'Jawa Timur': ['Surabaya', 'Malang', 'Sidoarjo', 'Gresik', 'Pasuruan'],
+    'Banten': ['Tangerang', 'Tangerang Selatan', 'Cilegon', 'Serang'],
+  },
+  stores: {
+    'Jakarta Utara': ['Depot Logistik Tanjung Priok', 'Gudang Marunda Center', 'DC Pluit'],
+    'Jakarta Barat': ['DC Cengkareng', 'Hub Daan Mogot'],
+    'Bekasi': ['Hub Industri MM2100', 'DC Cikarang Dry Port', 'Depot Tambun'],
+    'Karawang': ['KIIC Hub Karawang', 'Surya Cipta Warehouse'],
+    'Kota Bandung': ['DC Gedebage', 'Hub Soekarno Hatta'],
+    'Semarang': ['Depot Pelabuhan Tanjung Emas', 'Kawasan Industri Wijayakusuma'],
+    'Surabaya': ['DC Rungkut Industri', 'Hub Tanjung Perak', 'Margomulyo Logistics Park'],
+  },
 };
 
 export const mockVendors = [];

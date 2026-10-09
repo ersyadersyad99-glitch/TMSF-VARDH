@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { Maximize2, Compass, Layers, Radio } from 'lucide-react';
+import { Maximize2, Compass, Layers, Radio, AlertTriangle } from 'lucide-react';
 
 const STATUS_COLORS = {
   MOVING:  { bg: '#10b981', border: '#059669', text: '#ffffff', label: 'Moving' },
@@ -46,29 +46,37 @@ export default function GpsMap({
   const mapContainerRef = useRef(null);
   const mapInstanceRef = useRef(null);
   const markersRef = useRef(new Map());
+  const [mapInitError, setMapInitError] = useState(null);
 
   // Initialize MapLibre
   useEffect(() => {
     if (!mapContainerRef.current) return;
 
-    const map = new maplibregl.Map({
-      container: mapContainerRef.current,
-      style: DEFAULT_MAP_STYLE,
-      center: [106.8456, -6.2088], // Jakarta default
-      zoom: 9,
-      attributionControl: true,
-    });
+    try {
+      const map = new maplibregl.Map({
+        container: mapContainerRef.current,
+        style: DEFAULT_MAP_STYLE,
+        center: [106.8456, -6.2088], // Jakarta default
+        zoom: 9,
+        attributionControl: true,
+      });
 
-    map.addControl(new maplibregl.NavigationControl(), 'top-right');
-    map.addControl(new maplibregl.FullscreenControl(), 'top-right');
+      map.addControl(new maplibregl.NavigationControl(), 'top-right');
+      map.addControl(new maplibregl.FullscreenControl(), 'top-right');
 
-    mapInstanceRef.current = map;
+      mapInstanceRef.current = map;
 
-    return () => {
-      map.remove();
-      mapInstanceRef.current = null;
-      markersRef.current.clear();
-    };
+      return () => {
+        try {
+          map.remove();
+        } catch (e) {}
+        mapInstanceRef.current = null;
+        markersRef.current.clear();
+      };
+    } catch (err) {
+      console.error('Failed to initialize MapLibre GL:', err);
+      setMapInitError(err?.message || 'WebGL tidak didukung atau terjadi kendala pada inisialisasi peta.');
+    }
   }, []);
 
   // Sync Markers
@@ -259,6 +267,31 @@ export default function GpsMap({
 
     map.fitBounds(bounds, { padding: 80, maxZoom: 15 });
   };
+
+  if (mapInitError) {
+    return (
+      <div style={{
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+        height, background: 'var(--color-bg-card, #ffffff)', borderRadius: 12, border: '1px dashed var(--color-border)',
+        padding: 24, textAlign: 'center', color: 'var(--text-secondary)'
+      }}>
+        <AlertTriangle size={36} color="var(--color-warning, #f59e0b)" style={{ marginBottom: 12 }} />
+        <h4 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 6 }}>
+          Peta Tidak Dapat Dimuat
+        </h4>
+        <p style={{ fontSize: 13, maxWidth: 440, marginBottom: 16 }}>
+          {mapInitError}. Pastikan browser Anda mendukung akselerasi perangkat keras WebGL.
+        </p>
+        <button
+          type="button"
+          className="btn btn-secondary btn-sm"
+          onClick={() => window.location.reload()}
+        >
+          Muat Ulang Halaman
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div style={{ position: 'relative', width: '100%', height, borderRadius: 12, overflow: 'hidden', border: '1px solid var(--color-border)' }}>

@@ -31,11 +31,20 @@ export default function MasterLocations() {
   const [activeTab, setActiveTab] = useState('tracking'); // 'tracking' | 'master'
   const { addToast } = useToastStore();
 
-  // Master Lokasi State with Persistence
+  // Master Lokasi State with Persistence & safe recovery
   const [locations, setLocations] = useState(() => {
     try {
       const saved = localStorage.getItem('vardh_locations_data');
-      if (saved) return JSON.parse(saved);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed?.provinces) && parsed.provinces.length > 0) {
+          return {
+            provinces: parsed.provinces,
+            cities: parsed.cities || DEFAULT_LOCATIONS.cities,
+            stores: parsed.stores || DEFAULT_LOCATIONS.stores,
+          };
+        }
+      }
     } catch (e) {}
     return DEFAULT_LOCATIONS;
   });
@@ -58,6 +67,15 @@ export default function MasterLocations() {
   const [searchFilter, setSearchFilter] = useState('');
   const [simulatorActive, setSimulatorActive] = useState(true);
   const [lastRefreshed, setLastRefreshed] = useState(new Date());
+
+  const handleResetLocations = () => {
+    try {
+      localStorage.removeItem('vardh_locations_data');
+    } catch (e) {}
+    setLocations(DEFAULT_LOCATIONS);
+    setExpanded('DKI Jakarta');
+    addToast('Data master wilayah & toko direset ke standar default!', 'success');
+  };
 
   const fetchGpsVehicles = async () => {
     setLoadingGps(true);
@@ -150,20 +168,25 @@ export default function MasterLocations() {
     addToast(`Toko "${storeToDelete}" dihapus.`, 'info');
   };
 
-  // Filtered vehicles
-  const filteredVehicles = vehicles.filter((v) => {
+  // Defensive Filtered vehicles
+  const safeVehicles = Array.isArray(vehicles) ? vehicles : [];
+
+  const filteredVehicles = safeVehicles.filter((v) => {
+    if (!v) return false;
     const matchStatus = statusFilter === 'ALL' || v.status === statusFilter;
+    const plateStr = String(v.plate || '');
+    const typeStr = String(v.vehicleType || '');
     const matchSearch = !searchFilter.trim() ||
-      v.plate.toLowerCase().includes(searchFilter.toLowerCase()) ||
-      v.vehicleType.toLowerCase().includes(searchFilter.toLowerCase());
+      plateStr.toLowerCase().includes(searchFilter.toLowerCase()) ||
+      typeStr.toLowerCase().includes(searchFilter.toLowerCase());
     return matchStatus && matchSearch;
   });
 
   // Summary counts
-  const countMoving = vehicles.filter((v) => v.status === 'MOVING').length;
-  const countIdle = vehicles.filter((v) => v.status === 'IDLE').length;
-  const countStopped = vehicles.filter((v) => v.status === 'STOPPED').length;
-  const countOffline = vehicles.filter((v) => v.status === 'OFFLINE').length;
+  const countMoving = safeVehicles.filter((v) => v?.status === 'MOVING').length;
+  const countIdle = safeVehicles.filter((v) => v?.status === 'IDLE').length;
+  const countStopped = safeVehicles.filter((v) => v?.status === 'STOPPED').length;
+  const countOffline = safeVehicles.filter((v) => v?.status === 'OFFLINE').length;
 
   return (
     <div>
@@ -396,10 +419,39 @@ export default function MasterLocations() {
       ) : (
         /* TAB 2: Master Wilayah & Toko Existing */
         <div>
+          {/* Subheader / Action Bar for Master Wilayah */}
+          <div className="card" style={{ padding: '14px 18px', marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div>
+              <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--text-primary)' }}>
+                Database Master Wilayah & Toko
+              </div>
+              <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 2 }}>
+                Tersedia {safeProvinces.length} provinsi aktif untuk tujuan pengiriman dan penugasan armada DO
+              </div>
+            </div>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button
+                type="button"
+                className="btn btn-secondary btn-sm"
+                onClick={handleResetLocations}
+                title="Kembalikan struktur wilayah & toko ke default VARDH"
+              >
+                Reset ke Standar
+              </button>
+              <button
+                type="button"
+                className="btn btn-primary btn-sm"
+                onClick={() => setShowAddModal(true)}
+              >
+                <Plus size={14} /> Tambah Lokasi Baru
+              </button>
+            </div>
+          </div>
+
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-            {locations.provinces.map((province) => {
+            {safeProvinces.map((province) => {
               const isOpen = expanded === province;
-              const cities = locations.cities[province] || [];
+              const cities = safeCities[province] || [];
               return (
                 <div key={province} className="card" style={{ padding: 0 }}>
                   <div
@@ -423,7 +475,7 @@ export default function MasterLocations() {
                   {isOpen && (
                     <div style={{ padding: '12px 18px' }}>
                       {cities.map((city) => {
-                        const stores = locations.stores[city] || [];
+                        const stores = safeStores[city] || [];
                         const cityKey = `${province}-${city}`;
                         const cityOpen = expandedCity === cityKey;
                         return (
@@ -511,7 +563,7 @@ export default function MasterLocations() {
                   value={modalForm.province}
                   onChange={(e) => setModalForm((f) => ({ ...f, province: e.target.value }))}
                 >
-                  {locations.provinces.map((p) => (
+                  {safeProvinces.map((p) => (
                     <option key={p} value={p}>{p}</option>
                   ))}
                   <option value="__NEW__">+ Input Provinsi Baru...</option>
