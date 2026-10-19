@@ -31,19 +31,13 @@ export const TENANTS: Record<string, TenantConfig> = {
   'tms-demo': {
     id:     'tms-demo',
     name:   'VARDH Demo Platform',
-    dbName: 'tmsf_gercepin',
+    dbName: 'tmsf_demo',
   },
 
   demo: {
     id:     'demo',
     name:   'VARDH Demo Platform',
-    dbName: 'tmsf_gercepin',
-  },
-
-  gercepin: {
-    id:     'gercepin',
-    name:   'PT Gerak Cepat Indonesia',
-    dbName: 'tmsf_gercepin',
+    dbName: 'tmsf_demo',
   },
 
   dam: {

@@ -29,10 +29,9 @@ async function resolveUsernameToEmail(identifier: string): Promise<string> {
   const normalized = clean.toLowerCase();
   if (normalized.includes('ersyad') && normalized.includes('vardh')) return 'ersyad.vardh@vardh.id';
   if (normalized.includes('ersyad') && normalized.includes('dam')) return 'ersyad.dam@dam.id';
-  if (normalized.includes('ersyad') && normalized.includes('gercepin')) return 'ersyad.vardh@vardh.id';
   if (normalized.includes('ersyad')) return 'ersyad.vardh@vardh.id';
   if (normalized.includes('admin') && normalized.includes('dam')) return 'admin@dam.id';
-  if (normalized.includes('admin')) return 'admin@gercepin.com';
+  if (normalized.includes('admin')) return 'ersyad.vardh@vardh.id';
   if (normalized.includes('dispatcher')) return 'dispatcher@tms.id';
   if (normalized.includes('finance')) return 'finance@tms.id';
   if (normalized.includes('viewer')) return 'viewer@tms.id';

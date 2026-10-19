@@ -1,4 +1,4 @@
-import { gercepinBranding, TenantBranding } from './gercepin';
+import type { TenantBranding } from './types';
 import { damBranding } from './dam';
 import { vardhLogisticsBranding } from './vardh';
 import { demoBranding } from './demo';
@@ -11,7 +11,6 @@ export const TENANT_BRANDINGS: Record<string, TenantBranding> = {
   'vardh-logistics': vardhLogisticsBranding,
   'tms-demo': demoBranding,
   demo: demoBranding,
-  gercepin: gercepinBranding,
   dam: damBranding,
 };
 

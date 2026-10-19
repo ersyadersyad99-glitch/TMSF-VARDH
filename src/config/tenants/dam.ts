@@ -1,4 +1,4 @@
-import type { TenantBranding } from './gercepin';
+import type { TenantBranding } from './types';
 
 export const damBranding: TenantBranding = {
   id: 'dam',
