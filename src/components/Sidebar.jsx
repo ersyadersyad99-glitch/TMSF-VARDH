@@ -102,13 +102,30 @@ export default function Sidebar() {
       <div className="sidebar-logo">
         <div className="vardh-sidebar-brand">
           <img
-            src="/vardh-v-emblem.png"
+            src={branding.logoImage || '/vardh-v-emblem.png'}
             alt={branding.sidebarTitle || 'VARDH'}
             className="vardh-sidebar-icon"
           />
           <div className="vardh-sidebar-text">
-            <span className="vardh-sidebar-title">VARDH</span>
-            <span className="vardh-sidebar-subtitle">Technology. Systems. Growth.</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <span className="vardh-sidebar-title">{branding.sidebarTitle || 'VARDH'}</span>
+              {branding.badge && (
+                <span style={{
+                  fontSize: 9,
+                  fontWeight: 700,
+                  letterSpacing: '0.5px',
+                  padding: '1px 5px',
+                  borderRadius: 4,
+                  background: branding.isDemo ? 'rgba(234, 179, 8, 0.15)' : 'rgba(0, 102, 255, 0.15)',
+                  color: branding.isDemo ? '#b45309' : 'var(--color-primary, #0066ff)',
+                  border: `1px solid ${branding.isDemo ? 'rgba(234, 179, 8, 0.3)' : 'rgba(0, 102, 255, 0.3)'}`,
+                  textTransform: 'uppercase',
+                }}>
+                  {branding.isDemo ? 'DEMO' : 'LOGISTICS'}
+                </span>
+              )}
+            </div>
+            <span className="vardh-sidebar-subtitle">{branding.sidebarSubtitle || 'Smart Supply Chain & Freight'}</span>
           </div>
         </div>
       </div>

@@ -69,16 +69,23 @@ export function tenantMiddleware(req: Request, res: Response, next: NextFunction
     // 1. X-Tenant header (for curl / API testing / frontend)
     let tenantId = req.headers['x-tenant'] as string | undefined;
 
-    // 2. Subdomain: e.g. gercepin.tms.local → "gercepin"
+    // 2. Subdomain: e.g. logistics.vardh.id → "logistics", tms-demo.vardh.id → "tms-demo"
     if (!tenantId) {
       const host = req.hostname ?? '';        // express strips port from hostname
-      const subdomain = host.split('.')[0];
+      const subdomain = host.split('.')[0]?.toLowerCase();
       if (subdomain && TENANTS[subdomain]) {
         tenantId = subdomain;
       }
     }
 
-    // 3. Fallback default
+    // 3. Normalize aliases
+    if (tenantId === 'vardh' || tenantId === 'vardh-logistics') {
+      tenantId = 'logistics';
+    } else if (tenantId === 'demo') {
+      tenantId = 'tms-demo';
+    }
+
+    // 4. Fallback default
     if (!tenantId || !TENANTS[tenantId]) {
       tenantId = DEFAULT_TENANT;
     }

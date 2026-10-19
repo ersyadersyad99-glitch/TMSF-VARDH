@@ -41,13 +41,30 @@ export default function Login() {
         <div className="gercep-nav-brand">
           <div className="vardh-nav-brand">
             <img
-              src="/vardh-v-emblem.png"
-              alt="VARDH"
+              src={branding.logoImage || '/vardh-v-emblem.png'}
+              alt={branding.sidebarTitle || 'VARDH'}
               className="vardh-nav-icon"
             />
             <div className="vardh-nav-text">
-              <span className="vardh-nav-title">VARDH</span>
-              <span className="vardh-nav-subtitle">Technology. Systems. Growth.</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span className="vardh-nav-title">{branding.sidebarTitle || 'VARDH'}</span>
+                {branding.badge && (
+                  <span style={{
+                    fontSize: 9,
+                    fontWeight: 700,
+                    letterSpacing: '0.5px',
+                    padding: '2px 6px',
+                    borderRadius: 4,
+                    background: branding.isDemo ? 'rgba(234, 179, 8, 0.2)' : 'rgba(0, 102, 255, 0.2)',
+                    color: branding.isDemo ? '#facc15' : '#60a5fa',
+                    border: `1px solid ${branding.isDemo ? 'rgba(234, 179, 8, 0.4)' : 'rgba(96, 165, 250, 0.4)'}`,
+                    textTransform: 'uppercase',
+                  }}>
+                    {branding.isDemo ? 'DEMO' : 'LOGISTICS'}
+                  </span>
+                )}
+              </div>
+              <span className="vardh-nav-subtitle">{branding.sidebarSubtitle || 'Smart Supply Chain & Freight'}</span>
             </div>
           </div>
         </div>
@@ -61,12 +78,13 @@ export default function Login() {
             <span className="gercep-white-text">MOVE WITH</span>{' '}
             <span className="vardh-blue-text">PURPOSE.</span><br />
             <span className="gercep-white-text">GROW WITH</span>{' '}
-            <span className="vardh-orange-text">VARDH</span>
+            <span className="vardh-orange-text">{branding.name || 'VARDH'}</span>
           </h1>
 
           <p className="gercep-hero-description">
-            We don't just deliver goods, we deliver trust, efficiency, and growth at
-            every destination. Experience the modern standard of logistics.
+            {branding.isDemo
+              ? 'Platform simulasi dan showcase sistem manajemen armada, order pengiriman, finance, serta pelacakan telematics terpadu VARDH TMS.'
+              : 'Enterprise Transport Management System untuk operasional armada, manajemen order terdistribusi, biaya jalan, dan pelacakan telematics realtime.'}
           </p>
         </div>
 
@@ -74,9 +92,9 @@ export default function Login() {
         <div className="gercep-hero-right">
           <div className="login-card gercep-glass-card">
             <div className="login-card-header">
-              <div className="gercep-card-badge">TMS SYSTEM LOGIN</div>
+              <div className="gercep-card-badge">{branding.portalLabel || 'TMS SYSTEM LOGIN'}</div>
               <h2>Selamat Datang</h2>
-              <p>Masuk ke akun TMS VARDH</p>
+              <p>Masuk ke akun {branding.sidebarTitle || 'VARDH TMS'}</p>
             </div>
 
             <form className="login-form" onSubmit={handleSubmit}>

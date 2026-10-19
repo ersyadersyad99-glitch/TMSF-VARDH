@@ -1,9 +1,10 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { getActiveTenantId, getTenantBranding } from '../config/tenants';
 
+const defaultTenant = getActiveTenantId();
 const TenantContext = createContext({
-  tenantId: 'gercepin',
-  branding: getTenantBranding('gercepin'),
+  tenantId: defaultTenant,
+  branding: getTenantBranding(defaultTenant),
   setTenant: () => {},
 });
 

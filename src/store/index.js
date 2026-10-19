@@ -3,6 +3,7 @@ import { authClient } from '../services/auth';
 import { apiSync } from '../services/api';
 import { mockUsers } from '../data/mockUsers';
 import { mockOrders, mockInvoices, mockTravelFunds, mockFleet, mockDrivers, mockVendors, mockClients } from '../data/mockData';
+import { getActiveTenantId } from '../config/tenants';
 
 // ---- Server-backed Better Auth Store (HttpOnly Cookie Session) ----
 export const useAuthStore = create((set, get) => ({
@@ -172,16 +173,23 @@ export const useToastStore = create((set) => ({
   removeToast: (id) => set(s => ({ toasts: s.toasts.filter(t => t.id !== id) })),
 }));
 
-// LocalStorage helper for Zustand stores
+// LocalStorage helper for Zustand stores with tenant namespacing
 const loadStored = (key, fallback) => {
   try {
-    const raw = localStorage.getItem(key);
+    const tenantKey = `${getActiveTenantId()}_${key}`;
+    const raw = localStorage.getItem(tenantKey);
     if (raw !== null) {
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed) && parsed.length > 0) return parsed;
     }
+    // Backward compatibility fallback
+    const legacyRaw = localStorage.getItem(key);
+    if (legacyRaw !== null) {
+      const parsed = JSON.parse(legacyRaw);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    }
     // First time initialization or empty local data — store fallback into localStorage
-    localStorage.setItem(key, JSON.stringify(fallback));
+    localStorage.setItem(tenantKey, JSON.stringify(fallback));
     return fallback;
   } catch (e) {
     console.error(`Error loading stored key ${key}`, e);
@@ -191,7 +199,8 @@ const loadStored = (key, fallback) => {
 
 const saveStored = (key, data) => {
   try {
-    localStorage.setItem(key, JSON.stringify(data));
+    const tenantKey = `${getActiveTenantId()}_${key}`;
+    localStorage.setItem(tenantKey, JSON.stringify(data));
   } catch (e) {
     console.error(`Error saving key ${key}`, e);
   }

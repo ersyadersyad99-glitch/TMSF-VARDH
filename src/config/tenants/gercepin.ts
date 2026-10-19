@@ -15,6 +15,9 @@ export interface TenantBranding {
   logoBg: string;
   logoImage?: string;   // Optional: path to actual logo image file (in /public)
   modules: TenantModules;
+  badge?: string;
+  isDemo?: boolean;
+  portalLabel?: string;
   colors: {
     primary: string;
     primaryHover: string;

@@ -1,15 +1,18 @@
 import type { TenantBranding } from './gercepin';
 
-export const vardhBranding: TenantBranding = {
-  id: 'vardh',
-  name: 'VARDH Indonesia',
-  sidebarTitle: 'VARDH TMS',
-  sidebarSubtitle: 'Technology. Systems. Growth.',
-  browserTitle: 'VARDH — Transport Management System',
+export const vardhLogisticsBranding: TenantBranding = {
+  id: 'logistics',
+  name: 'VARDH Logistics',
+  sidebarTitle: 'VARDH Logistics',
+  sidebarSubtitle: 'Smart Supply Chain & Freight',
+  browserTitle: 'VARDH Logistics — Enterprise TMS',
   logoText: 'V',
   logoSub: 'VARDH',
   logoBg: 'linear-gradient(135deg, #0066ff 0%, #00b894 100%)',
-  logoImage: '/logo-vardh.png',
+  logoImage: '/vardh-v-emblem.png',
+  badge: 'ENTERPRISE TMS',
+  isDemo: false,
+  portalLabel: 'VARDH LOGISTICS PORTAL',
   modules: {
     finance: true,
     fleet: true,
@@ -25,3 +28,6 @@ export const vardhBranding: TenantBranding = {
     textPrimary: '#0a1931',
   },
 };
+
+// Backward compatibility alias
+export const vardhBranding = vardhLogisticsBranding;
