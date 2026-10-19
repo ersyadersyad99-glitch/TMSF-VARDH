@@ -1,5 +1,6 @@
 // Central export for all Drizzle schema tables
 export * from './auth.js';
+export * from './control-plane.js';
 export * from './clients.js';
 export * from './drivers.js';
 export * from './fleet.js';
